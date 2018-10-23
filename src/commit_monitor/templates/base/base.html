@@ -1,0 +1,42 @@
+<html lang="en">
+
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<style>
+    .topnav-left {
+        float: left;
+        margin: 15px;
+        font-size: 20px;
+    }
+
+    .topnav-right {
+        font-size: 20px;
+        margin: 15px;
+        float: right;
+    }
+</style>
+
+<body>
+    <div>
+        <div class='topnav-left'>
+            <a href='Main'>Main page</a>
+        </div>
+        <div class="topnav-right">
+            <a href=''
+            <a href='/login/'>Login</a>
+        </div>
+    </div>
+    <br><br>
+    {% block body %}
+    {% endblock %}
+</body>
+
+</html>

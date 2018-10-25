@@ -25,16 +25,35 @@
 </style>
 
 <body>
-    <div>
-        <div class='topnav-left'>
-            <a href='Main'>Main page</a>
+    {% if session['username'] %}
+        <div>
+            <div class='topnav-left'>
+                <a href="/">Main page</a>
+                <a href="/repository/add">Add</a>
+                <a href="/repository/display"></a>
+                <a href="/repository/subscribed">Subscribed</a>
+            </div>
+            <div class="topnav-right"> 
+                <h3>Hello {{session['username']}}</h3>
+                <a href="/logout">Logout</a>
+            </div>
         </div>
-        <div class="topnav-right">
-            <a href=''
-            <a href='/login/'>Login</a>
+    {% endif %}
+
+
+    {% if not session['username'] %}
+        <div>
+            <div class='topnav-left'>
+                <a href='/'>Main page</a>
+            </div>
+            <div class="topnav-right"> 
+                <a href='/login'>Login</a>
+            </div>
         </div>
-    </div>
+    {% endif %}
+
     <br><br>
+    <hr>
     {% block body %}
     {% endblock %}
 </body>

@@ -1,6 +1,13 @@
 {% extends "base/base.html" %}
 {% block title%}Display{% endblock %}
 {% block body %}
-	<h1>Display page</h1>
-	<hr>
+
+<h1>Repository was added</h1>
+<div>
+	Name: {{ repository.name }}<br>
+	URL: {{ repository.url }}<br>
+	BRANCH: {{ repository.branch }}<br>
+	Type: Github <br>
+</div>
+
 {% endblock %}

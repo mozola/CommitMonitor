@@ -2,5 +2,22 @@
 {% block title%}New{% endblock %}
 {% block body %}
 	<h1>New repository page</h1>
-	<hr>
+
+	<form method="POST">
+		<label>Repository name</label>
+		<input type="text" name="name" required><br>
+
+		<label>Repository Url</label>
+		<input type="text" name="url" required><br>
+
+		<label>Branch</label>
+		<input type="text" name="branch" required><br>
+
+		<label>Github type</label>
+		<select name="type">
+				<option>Github</option>
+				<option>Gitlab</option>
+		</select><br>
+		<input type="submit" value="Add">
+	</form>
 {% endblock %}

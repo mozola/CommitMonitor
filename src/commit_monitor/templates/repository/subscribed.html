@@ -1,0 +1,28 @@
+{% extends "base/base.html" %}
+{% block title%}New{% endblock %}
+{% block body %}
+<h1>All of your subscribed repositories</h1>
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <td>LP</td>
+                <td>Repositorie</td>
+                <td>Branch</td>
+                <td>User</td>
+                <td>Commits</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for element in repositories %}
+            <tr>
+                <td>1</td>
+                <td>{{ element.url }}</td>
+                <td>{{ element.branch }}</td>
+                <td>{{ session['username'] }}</td>
+                <td>321</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endblock %}

@@ -10,4 +10,14 @@
 	Type: Github <br>
 </div>
 
+<h1>Branches</h1><hr><br>
+<form action="{{url_for('add_repository')}}" method="GET">
+	{% for i in branches %}
+	<input type="checkbox" name="vehicle" value="{{i}}"> {{i}}<br>
+	{% endfor %}
+	<input type="submit" value="Submit">
+</form>
+
+
+
 {% endblock %}

@@ -7,21 +7,25 @@
         <thead>
             <tr>
                 <td>LP</td>
-                <td>Repositorie</td>
+                <td>Name</td>
                 <td>Branch</td>
                 <td>User</td>
                 <td>Commits</td>
             </tr>
         </thead>
         <tbody>
+            {% set count = 1 %}
             {% for element in repositories %}
-            <tr>
-                <td>1</td>
-                <td>{{ element.url }}</td>
-                <td>{{ element.branch }}</td>
-                <td>{{ session['username'] }}</td>
-                <td>321</td>
-            </tr>
+                {%for branch in element.branches %}
+                    <tr>
+                        <td>{{ count }}</td>
+                        <td>{{ element.name }}</td>
+                        <td>{{ branch[0] }}</td>
+                        <td>{{ session['username'] }}</td>
+                        <td>{{ branch[1] }}</td>
+                    </tr>
+                    {% set count = count + 1 %}
+                {% endfor %}
             {% endfor %}
         </tbody>
     </table>

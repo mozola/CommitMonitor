@@ -6,7 +6,7 @@ from flask import url_for
 import requests
 
 from bs4 import BeautifulSoup
-from .http_handler import Repository
+from .http_handler import Repository, Repositories
 
 
 app = Flask(__name__)
@@ -26,7 +26,7 @@ USER_DATE = {'username': 'admin',
 
 
 """ All subscribed repositories """
-all_repositories = []
+all_repositories = Repositories()
 
 
 @app.route('/')
@@ -65,25 +65,16 @@ def register():
     return render_template('auth/register.html')
 
 
-def get_branches(url):
-        resp = requests.get(url)
-        soup = BeautifulSoup(resp.text)
-        for i in soup.findAll('div', {'class': 'branch-summary js-branch-row'}):
-            yield i.attrs['data-branch-name']
-
-
 @app.route('/repository/add', methods=['POST', 'GET'])
 def add_repository():
     if request.method == 'POST':
         repository = Repository(request.form['name'],
                                 request.form['url'],
-        )
-
-        all_repositories.append(repository)
+                               )
+        all_repositories.add(repository)
         return render_template('repository/display.html',
                                 repository=repository,
-                                branches=list(get_branches(repository.url)),
-               )
+                              )
     return render_template('repository/new.html')
 
 
@@ -96,7 +87,8 @@ def display_repository():
 
 @app.route('/repository/subscribed')
 def subscribed():
-    return render_template('repository/subscribed.html', repositories = all_repositories)
+    return render_template('repository/subscribed.html',
+                           repositories = all_repositories._container)
 
 
 @app.errorhandler(404)

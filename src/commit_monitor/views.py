@@ -78,13 +78,6 @@ def add_repository():
     return render_template('repository/new.html')
 
 
-@app.route('/repository/display')
-def display_repository():
-    return render_template('repository/display.html',
-                            content=all_repositories,
-                          )
-
-
 @app.route('/repository/subscribed')
 def subscribed():
     return render_template('repository/subscribed.html',
@@ -94,3 +87,9 @@ def subscribed():
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('errors/404.html'), 404
+
+
+@app.route('/repository/commits')
+def commits():
+    return render_template('repository/commits.html',
+                           repositories = all_repositories._container)

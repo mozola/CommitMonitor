@@ -14,18 +14,14 @@
             </tr>
         </thead>
         <tbody>
-            {% set count = 1 %}
-            {% for element in repositories %}
-                {%for branch in element.branches %}
+            {% for i in range(repositories|length) %}
                     <tr>
-                        <td>{{ count }}</td>
-                        <td>{{ element.name }}</td>
-                        <td>{{ branch[0] }}</td>
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ repositories[i].name }}</td>
+                        <td>{{ repositories[i].branch }}</td>
                         <td>{{ session['username'] }}</td>
-                        <td>{{ branch[1] }}</td>
+                        <td>{{ repositories[i].commits|length }}</td>
                     </tr>
-                    {% set count = count + 1 %}
-                {% endfor %}
             {% endfor %}
         </tbody>
     </table>

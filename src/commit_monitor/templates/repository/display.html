@@ -1,0 +1,12 @@
+{% extends "base/base.html" %}
+{% block title%}Display{% endblock %}
+{% block body %}
+
+<h1>Repository was added</h1>
+<div>
+	Name: {{ repository.name }}<br>
+	URL: {{ repository.url }}<br>
+	Type: Github <br>
+</div>
+
+{% endblock %}

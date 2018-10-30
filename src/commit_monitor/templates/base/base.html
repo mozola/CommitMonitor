@@ -1,0 +1,62 @@
+<html lang="en">
+
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<style>
+    .topnav-left {
+        float: left;
+        margin: 15px;
+        font-size: 20px;
+    }
+
+    .topnav-right {
+        font-size: 20px;
+        margin: 15px;
+        float: right;
+    }
+</style>
+
+<body>
+    {% if session['username'] %}
+        <div>
+            <div class='topnav-left'>
+                <a href="/">Main page</a>
+                <a href="/repository/add">Add</a>
+                <a href="/repository/display"></a>
+                <a href="/repository/subscribed">Subscribed</a>
+                <a href="/repository/commits">Commits</a>
+            </div>
+            <div class="topnav-right"> 
+                <h3>Hello {{session['username']}}</h3>
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+    {% endif %}
+
+
+    {% if not session['username'] %}
+        <div>
+            <div class='topnav-left'>
+                <a href='/'>Main page</a>
+            </div>
+            <div class="topnav-right"> 
+                <a href='/login'>Login</a>
+            </div>
+        </div>
+    {% endif %}
+
+    <br><br>
+    <hr>
+    {% block body %}
+    {% endblock %}
+</body>
+
+</html>

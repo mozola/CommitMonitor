@@ -37,7 +37,7 @@ def index():
     return render_template('base/index.html')
 
 
-@app.route('/login', methods=['POST', 'GET'])
+@app.route('/auth/login', methods=['POST', 'GET'])
 def login():
     """
         View to login user and setup session
@@ -51,7 +51,7 @@ def login():
     return render_template('auth/login.html')
 
 
-@app.route('/logout')
+@app.route('/auth/logout')
 def logout():
     """
         Logout user and remove him from session
@@ -60,7 +60,7 @@ def logout():
     return render_template('auth/logout.html')
 
 
-@app.route('/register')
+@app.route('/auth/register')
 def register():
     return render_template('auth/register.html')
 
@@ -83,13 +83,15 @@ def subscribed():
     return render_template('repository/subscribed.html',
                            repositories = all_repositories._container)
 
-
-@app.errorhandler(404)
-def page_not_found(e):
-    return render_template('errors/404.html'), 404
-
+@app.route('/repository/modify')
+def modify():
+    return render_template('repository/modify.html')
 
 @app.route('/repository/commits')
 def commits():
     return render_template('repository/commits.html',
                            repositories = all_repositories._container)
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('errors/404.html'), 404

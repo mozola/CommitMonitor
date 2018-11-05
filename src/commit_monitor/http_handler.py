@@ -38,7 +38,6 @@ class Repositories:
 
     def add(self, repository):
         for branch in self.get_branches(repository.url):
-            print(branch)
             repo = Repository(repository.name, repository.url)
             repo.branch = branch
             repo.commits = repository.get_commits(branch)

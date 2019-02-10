@@ -16,7 +16,7 @@ class Repository:
         resp = requests.get('{}/commits/{}'.format(self.url, branch))
         soup = BeautifulSoup(resp.text)
         for i in soup.find_all('a', {'class': 'message js-navigation-open'}):
-            yield i.attrs['title']
+            yield i.text
 
     def get_commits(self, branch):
         return list(self._get_commits(branch))
@@ -33,8 +33,9 @@ class Repositories:
     def get_branches(self, url):
         resp = requests.get(url + '/branches/')
         soup = BeautifulSoup(resp.text)
-        for i in soup.findAll('div', {'class': 'branch-summary js-branch-row'}):
-            yield i.attrs['data-branch-name']
+
+        for i in soup.findAll('a', {'class': 'branch-name css-truncate-target v-align-baseline width-fit mr-2 Details-content--shown'}):
+            yield i.text
 
     def add(self, repository):
         for branch in self.get_branches(repository.url):

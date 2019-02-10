@@ -11,6 +11,7 @@ from .http_handler import Repository, Repositories
 
 app = Flask(__name__)
 
+
 """ Temporary configuration added to views """
 app.config.update(
     SECRET_KEY=b'123',
@@ -68,12 +69,11 @@ def register():
 @app.route('/repository/add', methods=['POST', 'GET'])
 def add_repository():
     if request.method == 'POST':
-        repository = Repository(request.form['name'],
-                                request.form['url'])
+        repository = Repository(name = request.form['name'],
+                                url = request.form['url'])
 
         all_repositories.add(repository)
-        return render_template('repository/modify.html',
-                                repository=repository)
+        return render_template('repository/modify.html')
 
     return render_template('repository/new.html')
 
@@ -83,14 +83,22 @@ def subscribed():
     return render_template('repository/subscribed.html',
                            repositories = all_repositories._container)
 
+
 @app.route('/repository/modify')
 def modify():
     return render_template('repository/modify.html')
+
 
 @app.route('/repository/commits')
 def commits():
     return render_template('repository/commits.html',
                            repositories = all_repositories._container)
+
+@app.route('/statistics/projects')
+def statistics_project():
+    repositories = all_repositories._container
+    return render_template('statistics/projects.html', repositories=repositories)
+
 
 @app.errorhandler(404)
 def page_not_found(e):

@@ -5,6 +5,7 @@ from flask import request, redirect
 from flask import url_for
 import requests
 
+from datetime import timedelta
 from bs4 import BeautifulSoup
 from .http_handler import Repository, Repositories
 
@@ -18,6 +19,10 @@ app.config.update(
     TESTING=False,
     PROPAGATE_EXCEPTIONS=None,
 )
+
+
+app.config['PERMANENT_SESSION_LIFETIME'] =  timedelta(minutes=5)
+app.config['SECRET_KEY'] = b'123'
 
 
 """ Temporary dictionary to login user """

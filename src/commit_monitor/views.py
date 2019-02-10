@@ -4,6 +4,7 @@ from flask import session
 from flask import request, redirect
 from flask import url_for
 import requests
+from datetime import timedelta
 
 from bs4 import BeautifulSoup
 from .http_handler import Repository, Repositories
@@ -11,6 +12,8 @@ from .http_handler import Repository, Repositories
 
 app = Flask(__name__)
 
+app.config['PERMANENT_SESSION_LIFETIME'] =  timedelta(minutes=5)
+app.config['SECRET_KEY'] = b'123'
 
 """ Temporary configuration added to views """
 app.config.update(
@@ -18,6 +21,7 @@ app.config.update(
     DEBUG=False,
     TESTING=False,
     PROPAGATE_EXCEPTIONS=None,
+    PERMANENT_SESSION_LIFETIME=timedelta(minutes=5),
 )
 
 
@@ -47,6 +51,7 @@ def login():
         if (request.form['username'] == USER_DATE['username']
             and request.form['password'] == USER_DATE['password']):
             session['username'] = request.form['username']
+            session.permanent = True
             return redirect(url_for('index'))
 
     return render_template('auth/login.html')

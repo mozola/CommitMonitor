@@ -69,12 +69,12 @@ def register():
 def add_repository():
     if request.method == 'POST':
         repository = Repository(request.form['name'],
-                                request.form['url'],
-                               )
+                                request.form['url'])
+
         all_repositories.add(repository)
-        return render_template('repository/display.html',
-                                repository=repository,
-                              )
+        return render_template('repository/modify.html',
+                                repository=repository)
+
     return render_template('repository/new.html')
 
 

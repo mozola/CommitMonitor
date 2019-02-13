@@ -4,25 +4,89 @@ import requests
 from bs4 import BeautifulSoup
 
 
+class Commit:
+
+    def __init__(self, auth, name, date):
+        self._auth = auth
+        self._date = date
+        self._name = name
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def auth(self):
+        return self._auth
+
+    @property
+    def date(self):
+        return self._date
+
+    def setup_author(self):
+        pass
+
+    def add_commit(self, branch):
+        pass
+
+
+class Branch:
+
+    def __init__(self, name, auth, url):
+        self._name = name
+        self._auth = auth
+        self._commits = list(self.setup_commits(url, name))
+    
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def auth(self):
+        return self._auth
+
+    @property
+    def commits(self):
+        return self._commits
+
+    def setup_commits(self, url, name):
+        resp = requests.get('{}/commits/{}'.format(url, name))
+        soup = BeautifulSoup(resp.text)
+        names = soup.find_all('a', {'class': 'message js-navigation-open'})
+        auths = soup.find_all('a', {'class': 'commit-author tooltipped tooltipped-s user-mention'})
+        dates = soup.find_all('relative-time')
+        for name, auth, date in zip(names, auths, dates):
+            yield Commit(name = name.text, auth=auth.text, date=date.text)
+
+
 class Repository:
 
     def __init__(self, name=None, url=None):
-        self.name = name
-        self.url = url
-        self.branch = None
-        self.commits = None
+        self._name = name
+        self._url = url
+        self._branches = list(self.setup_branches(url))
 
-    def _get_commits(self, branch):
-        resp = requests.get('{}/commits/{}'.format(self.url, branch))
+    @property
+    def name(self):
+        return self._name
+
+
+    @property
+    def url(self):
+        return self._url
+
+    @property
+    def branches(self):
+        return self._branches
+
+    def setup_branches(self, url):
+        resp = requests.get(url + '/branches/')
         soup = BeautifulSoup(resp.text)
-        for i in soup.find_all('a', {'class': 'message js-navigation-open'}):
-            yield i.text
-
-    def get_commits(self, branch):
-        return list(self._get_commits(branch))
-
-    def get_users(self):
-        pass
+        branches = soup.findAll('a', {'class': 'branch-name css-truncate-target v-align-baseline width-fit mr-2 Details-content--shown'})
+        users = soup.findAll('a', {'class': 'muted-link'})
+        for branch, auth in zip(branches, users):
+            yield Branch(name = branch.text, auth = auth.text, url = self.url)
 
 
 class Repositories:
@@ -30,16 +94,10 @@ class Repositories:
     def __init__(self):
         self._container = []
 
-    def get_branches(self, url):
-        resp = requests.get(url + '/branches/')
-        soup = BeautifulSoup(resp.text)
-
-        for i in soup.findAll('a', {'class': 'branch-name css-truncate-target v-align-baseline width-fit mr-2 Details-content--shown'}):
-            yield i.text
-
     def add(self, repository):
-        for branch in self.get_branches(repository.url):
-            repo = Repository(repository.name, repository.url)
-            repo.branch = branch
-            repo.commits = repository.get_commits(branch)
-            self._container.append(repo)
+        self._container.append(repository)
+
+    @property
+    def container(self):
+        return self._container
+

@@ -6,6 +6,7 @@ from flask import url_for
 import requests
 from datetime import timedelta
 
+from datetime import timedelta
 from bs4 import BeautifulSoup
 from .http_handler import Repository, Repositories
 
@@ -23,6 +24,10 @@ app.config.update(
     PROPAGATE_EXCEPTIONS=None,
     PERMANENT_SESSION_LIFETIME=timedelta(minutes=5),
 )
+
+
+app.config['PERMANENT_SESSION_LIFETIME'] =  timedelta(minutes=5)
+app.config['SECRET_KEY'] = b'123'
 
 
 """ Temporary dictionary to login user """
@@ -79,6 +84,7 @@ def add_repository():
 
         all_repositories.add(repository)
         return render_template('repository/modify.html')
+
 
     return render_template('repository/new.html')
 

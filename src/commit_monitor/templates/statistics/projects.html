@@ -3,12 +3,46 @@
 {% block body %}
 
 <h1>Get details about project</h1>
+<!--
+    TODO: Will be done, select project from a list
 
-<p>Please select your project: 
-    <select name="hall" id="hall" value="3">
-        {% for repository in repositories %}
-            <option>{{ repository.name }}</option>
+    <p>Please select your project: 
+        <select name="hall" id="hall" value="3">
+            {% for repository in repositories %}
+                <option>{{ repository.name }}</option>
+            {% endfor %}
+        </select>
+    </p>
+-->
+
+    <div class="container">
+        {% for i in range(repositories|length) %}
+            {% for branch in repositories[i].branches %}
+                <h1>{{ branch.name }}</h1>
+                    {% if branch.commits|length != (None, []) %}
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <td>LP</td>
+                                    <td>Commit name</td>
+                                    <td>User</td>
+                                    <td>Date</td>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for commit in branch.commits %}
+                                    <tr>
+                                        <td>{{ i + 1 }}</td>
+                                        <td>{{ commit.name }}</td>
+                                        <td>{{ commit.auth }}</td>
+                                        <td>{{ commit.date }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+            {% endfor %}
         {% endfor %}
-    </select>
-</p>
+
 {% endblock %}

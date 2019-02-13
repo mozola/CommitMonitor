@@ -20,15 +20,15 @@
                 <tbody>
                     {% for branch in repositories[i].branches %}
                     <tr>
-                        <td>{{ i + 1 }}</td>
+                        <td>{{ i }}</td>
                         <td>{{ branch.name }}</td>
-                        <td>Null</td>
+                        <td>{{ branch.auth }}</td>
                         <td>{{ session['username'] }}</td>
-                        <td>Null</td>
                         <td>{{ branch.commits|length }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
+                
             </table>
         {% endfor %}
 {% endblock %}

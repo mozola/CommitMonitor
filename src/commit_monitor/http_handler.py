@@ -6,17 +6,23 @@ from bs4 import BeautifulSoup
 
 class Commit:
 
-    def __init__(self, url, branch, name):
-        self._author = None
-        self._date = None
+    def __init__(self, auth, name, date):
+        self._auth = auth
+        self._date = date
         self._name = name
 
-    def setup_date(self):
-        pass
+    @property
+    def name(self):
+        return self._name
 
-    def setup_name(self):
-        pass
-    
+    @property
+    def auth(self):
+        return self._auth
+
+    @property
+    def date(self):
+        return self._date
+
     def setup_author(self):
         pass
 
@@ -26,8 +32,9 @@ class Commit:
 
 class Branch:
 
-    def __init__(self, name, url):
+    def __init__(self, name, auth, url):
         self._name = name
+        self._auth = auth
         self._commits = list(self.setup_commits(url, name))
     
 
@@ -36,23 +43,21 @@ class Branch:
         return self._name
 
     @property
+    def auth(self):
+        return self._auth
+
+    @property
     def commits(self):
         return self._commits
-
-    def setup_name(self):
-        pass
-
-    def setup_author(self):
-        pass
-
-    def setup_date(self):
-        pass
 
     def setup_commits(self, url, name):
         resp = requests.get('{}/commits/{}'.format(url, name))
         soup = BeautifulSoup(resp.text)
-        for i in soup.find_all('a', {'class': 'message js-navigation-open'}):
-            yield Commit(name = i.text, branch=name, url=url)
+        names = soup.find_all('a', {'class': 'message js-navigation-open'})
+        auths = soup.find_all('a', {'class': 'commit-author tooltipped tooltipped-s user-mention'})
+        dates = soup.find_all('relative-time')
+        for name, auth, date in zip(names, auths, dates):
+            yield Commit(name = name.text, auth=auth.text, date=date.text)
 
 
 class Repository:
@@ -77,13 +82,11 @@ class Repository:
     def setup_branches(self, url):
         resp = requests.get(url + '/branches/')
         soup = BeautifulSoup(resp.text)
-        for i in soup.findAll('a', {'class': 'branch-name css-truncate-target v-align-baseline width-fit mr-2 Details-content--shown'}):
-            yield Branch(name = i.text, url = self.url)
-    '''
-    def get_commits(self, branch):
-        commit = Commit(self._url)
-        return list(commit.add_commit(branch))
-    '''
+        branches = soup.findAll('a', {'class': 'branch-name css-truncate-target v-align-baseline width-fit mr-2 Details-content--shown'})
+        users = soup.findAll('a', {'class': 'muted-link'})
+        for branch, auth in zip(branches, users):
+            yield Branch(name = branch.text, auth = auth.text, url = self.url)
+
 
 class Repositories:
 

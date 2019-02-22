@@ -1,6 +1,51 @@
 {% extends "base/base.html" %}
 {% block title%}CommitMonitor{% endblock %}
 {% block body %}
-<h1>Index page</h1>
+
+<h1>User activities</h1>
+
+    <div class="container">
+        <div class="col-3">
+            <form method="POST">
+                <label for="username">Username</label>
+                <input name="username" id="username" required>
+                <input type="submit" value="Get activities">
+            </form>
+        </div>
+    </div>
+
+
+    <div class="container">
+        {% for i in range(repositories|length) %}
+            {% for branch in repositories[i].branches %}
+                <h1>{{ branch.name }}</h1>
+                    {% if branch.commits|length != (None, []) %}
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <td>LP</td>
+                                    <td>Commit name</td>
+                                    <td>User</td>
+                                    <td>Date</td>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for commit in branch.commits %}
+                                    {% if commit.auth == user %}
+                                    <tr>
+                                        <td>{{ i + 1 }}</td>
+                                        <td>{{ commit.name }}</td>
+                                        <td>{{ commit.auth }}</td>
+                                        <td>{{ commit.date }}</td>
+                                    </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </div>
 
 {% endblock %}

@@ -1,20 +1,56 @@
 {% extends "base/base.html" %}
 {% block title%}New{% endblock %}
 {% block body %}
-	<h1>New repository page</h1>
 
-	<form method="POST">
-		<label>Repository name</label>
-		<input type="text" name="name" required><br>
+	{% if state %}
+		<h1>New repository page</h1>
+		<form method="POST">
+			<label>Repository name</label>
+			<input type="text" name="name" required><br>
 
-		<label>Repository Url</label>
-		<input type="text" name="url" required><br>
+			<label>Repository Url</label>
+			<input type="text" name="url" required><br>
 
-		<label>Github type</label>
-		<select name="type">
-				<option>Github</option>
-				<option>Gitlab</option>
-		</select><br>
-		<input type="submit" value="Next">
-	</form>
+			<label>Github type</label>
+			<select name="type">
+					<option>Github</option>
+					<option>Gitlab</option>
+			</select><br>
+			<input type="submit" value="Next">
+		</form>
+
+	{% else %}
+
+		<h1>All of your subscribed repositories</h1>
+		<div class="container">
+			{% for i in range(repositories|length) %}
+				<h1>{{ repositories[i].name }}</h1>
+
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<td>LP</td>
+							<td>Branch name</td>
+							<td>User</td>
+							<td>Date</td>
+							<td>Commits</td>
+						</tr>
+					</thead>
+
+					<tbody>
+						{% for branch in repositories[i].branches %}
+						<tr>
+							<td>{{ i }}</td>
+							<td>{{ branch.name }}</td>
+							<td>{{ branch.auth }}</td>
+							<td>{{ session['username'] }}</td>
+							<td>{{ branch.commits|length }}</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+
+				</table>
+			{% endfor %}
+		</div>
+	{% endif %}
 {% endblock %}

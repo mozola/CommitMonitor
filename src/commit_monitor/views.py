@@ -54,7 +54,7 @@ def login():
     """
     if request.method == 'POST':
         if (request.form['username'] == USER_DATE['username']
-            and request.form['password'] == USER_DATE['password']):
+                and request.form['password'] == USER_DATE['password']):
             session['username'] = request.form['username']
             session.permanent = True
             return redirect(url_for('index'))
@@ -79,14 +79,15 @@ def register():
 @app.route('/repository/add', methods=['POST', 'GET'])
 def add_repository():
     if request.method == 'POST':
-        repository = Repository(name = request.form['name'],
-                                url = request.form['url'])
+        repository = Repository(name=request.form['name'],
+                                url=request.form['url'])
 
         all_repositories.add(repository)
-        return render_template('repository/modify.html')
+        return render_template('repository/new.html',
+                               state=False,
+                               repositories=all_repositories._container)
 
-
-    return render_template('repository/new.html')
+    return render_template('repository/new.html', state=True)
 
 
 @app.route('/repository/subscribed')
@@ -105,10 +106,28 @@ def commits():
     return render_template('repository/commits.html',
                            repositories = all_repositories._container)
 
-@app.route('/statistics/projects')
+
+@app.route('/statistics/projects', methods=['POST', 'GET'])
 def statistics_project():
     repositories = all_repositories._container
+    if request.method == 'POST':
+        project_name = request.form['project_name']
+        print(repositories)
+        return render_template('statistics/projects.html',
+                               repositories=repositories,
+                               project_name=project_name)
     return render_template('statistics/projects.html', repositories=repositories)
+
+
+@app.route('/statistics/user', methods=['POST', 'GET'])
+def statistics_user():
+    repositories = all_repositories._container
+    if request.method == 'POST':
+        user = request.form['username']
+        return render_template('statistics/user.html',
+                               repositories=repositories,
+                               user=user)
+    return render_template('statistics/user.html')
 
 
 @app.errorhandler(404)

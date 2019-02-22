@@ -2,47 +2,50 @@
 {% block title%}CommitMonitor{% endblock %}
 {% block body %}
 
-<h1>Get details about project</h1>
-<!--
-    TODO: Will be done, select project from a list
-
-    <p>Please select your project: 
-        <select name="hall" id="hall" value="3">
-            {% for repository in repositories %}
-                <option>{{ repository.name }}</option>
-            {% endfor %}
-        </select>
-    </p>
--->
-
+    <h1>Details about {{ project_name }} project</h1>
+    <br>
     <div class="container">
-        {% for i in range(repositories|length) %}
-            {% for branch in repositories[i].branches %}
-                <h1>{{ branch.name }}</h1>
-                    {% if branch.commits|length != (None, []) %}
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <td>LP</td>
-                                    <td>Commit name</td>
-                                    <td>User</td>
-                                    <td>Date</td>
-                                </tr>
-                            </thead>
+        <div class="col-1">
+            <form method="POST">
+               <label for="project_name">Project name</label>
+               <input name="project_name" id="project_name" required>
+               <input type="submit" value="Get project activities">
+            </form>
+        </div>
+    </div>
 
-                            <tbody>
-                                {% for commit in branch.commits %}
+    <hr>
+
+        {% for i in range(repositories|length) %}
+            {% if project_name == repositories[i].name %}
+                {% for branch in repositories[i].branches %}
+                    <h1>{{ branch.name }}</h1>
+                        {% if branch.commits|length != (None, []) %}
+                            <table class="table table-striped">
+                                <thead>
                                     <tr>
-                                        <td>{{ i + 1 }}</td>
-                                        <td>{{ commit.name }}</td>
-                                        <td>{{ commit.auth }}</td>
-                                        <td>{{ commit.date }}</td>
+                                        <td>LP</td>
+                                        <td>Commit name</td>
+                                        <td>User</td>
+                                        <td>Date</td>
                                     </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    {% endif %}
-            {% endfor %}
+                                </thead>
+
+                                <tbody>
+                                    {% for commit in branch.commits %}
+                                        <tr>
+                                            <td>{{ i + 1 }}</td>
+                                            <td>{{ commit.name }}</td>
+                                            <td>{{ commit.auth }}</td>
+                                            <td>{{ commit.date }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% endif %}
+                {% endfor %}
+            {% endif %}
         {% endfor %}
+
 
 {% endblock %}

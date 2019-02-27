@@ -5,18 +5,29 @@
 	{% if state %}
 		<h1>New repository page</h1>
 		<form method="POST">
-			<label>Repository name</label>
-			<input type="text" name="name" required><br>
 
-			<label>Repository Url</label>
-			<input type="text" name="url" required><br>
+			<div class="form-group">
+    			<label for="name">Repository name</label>
+    			<input type="text" class="form-control" id="name" name="name" aria-describedby="emailHelp" placeholder="Enter name">
+  			</div>
 
-			<label>Github type</label>
-			<select name="type">
-					<option>Github</option>
-					<option>Gitlab</option>
-			</select><br>
-			<input type="submit" value="Next">
+			<div class="form-group">
+    			<label for="url">Repository Url</label>
+    			<input type="text" class="form-control" id="url" name="url" placeholder="Enter url repository">
+  			</div>
+
+
+			<div class="form-group">
+    			<label for="exampleFormControlSelect1">Select repository type</label>
+    			<select class="form-control" id="exampleFormControlSelect1">
+      				<option>GitHub</option>
+      				<option>GitLab</option>
+					<option>Bitbucket</option>
+
+		    	</select>
+			</div>
+
+			<button type="submit" class="btn btn-primary">Subscribe repository</button>
 		</form>
 
 	{% else %}

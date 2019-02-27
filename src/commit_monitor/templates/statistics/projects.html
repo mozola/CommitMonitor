@@ -2,50 +2,100 @@
 {% block title%}CommitMonitor{% endblock %}
 {% block body %}
 
-    <h1>Details about {{ project_name }} project</h1>
-    <br>
-    <div class="container">
-        <div class="col-1">
-            <form method="POST">
-               <label for="project_name">Project name</label>
-               <input name="project_name" id="project_name" required>
-               <input type="submit" value="Get project activities">
-            </form>
-        </div>
-    </div>
+<script type="text/javascript">
+  window.onload = function () {
 
-    <hr>
-
-        {% for i in range(repositories|length) %}
-            {% if project_name == repositories[i].name %}
+    var chart = new CanvasJS.Chart("chartContainer", {
+        theme: "dark1",
+        animationEnabled: true,
+        title:{
+            text: "Branch activities"
+        },
+        data: [
+        {
+            type: "bar",
+            dataPoints: [
+                {% for i in range(repositories|length) %}
+                {% if project_name == repositories[i].name %}
                 {% for branch in repositories[i].branches %}
-                    <h1>{{ branch.name }}</h1>
-                        {% if branch.commits|length != (None, []) %}
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <td>LP</td>
-                                        <td>Commit name</td>
-                                        <td>User</td>
-                                        <td>Date</td>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    {% for commit in branch.commits %}
-                                        <tr>
-                                            <td>{{ i + 1 }}</td>
-                                            <td>{{ commit.name }}</td>
-                                            <td>{{ commit.auth }}</td>
-                                            <td>{{ commit.date }}</td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        {% endif %}
+                    { label: "{{ branch.name }}",  y: {{ branch.commits|length }}  },
                 {% endfor %}
-            {% endif %}
-        {% endfor %}
+                {% endif %}
+                {% endfor %}
+            ]
+        }
+        ]
+    });
+    chart.render();
+  }
+</script>
+
+
+<br>
+
+
+<div>
+    <form method="POST">
+        <div class="form-group">
+            <div class="col-sm-2">
+                <label for="project_name">Subscribed project name</label>
+            </div>
+            <div class="col-sm-7">
+                <input type="text" class="form-control" id="project_name" name="project_name" placeholder="Enter project name"/>
+            </div>
+            <div class="col-sm-3">
+                <button type="submit" class="btn btn-primary">Get project activities</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<br><br>
+
+<div>
+    {% for i in range(repositories|length) %}
+        {% if project_name == repositories[i].name %}
+            {% for branch in repositories[i].branches %}
+                {% if branch.commits|length != 0 %}
+                    <h1>Branch name: {{ branch.name }}</h1>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <td>LP</td>
+                                <td>Commit name</td>
+                                <td>User</td>
+                                <td>Date</td>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                        {% for commit in branch.commits %}
+                            <tr>
+                                <td>{{ i + 1 }}</td>
+                                <td>{{ commit.name }}</td>
+                                <td>{{ commit.auth }}</td>
+                                <td>{{ commit.date }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <br><hr><br>
+
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+</div>
+
+
+<div>
+    <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"> </script>
+</div>
+
+
+<br><br>
 
 
 {% endblock %}

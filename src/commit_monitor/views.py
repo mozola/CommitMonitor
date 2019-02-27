@@ -82,9 +82,10 @@ def add_repository():
         repository = Repository(name=request.form['name'],
                                 url=request.form['url'])
 
-        all_repositories.add(repository)
-        return render_template('repository/new.html',
-                               state=False,
+        if repository.name not in [i.name for i in all_repositories.container]:
+            all_repositories.add(repository)
+
+        return render_template('repository/new.html', state=False,
                                repositories=all_repositories._container)
 
     return render_template('repository/new.html', state=True)
@@ -104,7 +105,7 @@ def modify():
 @app.route('/repository/commits')
 def commits():
     return render_template('repository/commits.html',
-                           repositories = all_repositories._container)
+                           repositories=all_repositories._container)
 
 
 @app.route('/statistics/projects', methods=['POST', 'GET'])

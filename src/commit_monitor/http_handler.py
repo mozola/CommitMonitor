@@ -36,7 +36,6 @@ class Branch:
         self._name = name
         self._auth = auth
         self._commits = list(self.setup_commits(url, name))
-    
 
     @property
     def name(self):
@@ -57,7 +56,7 @@ class Branch:
         auths = soup.find_all('a', {'class': 'commit-author tooltipped tooltipped-s user-mention'})
         dates = soup.find_all('relative-time')
         for name, auth, date in zip(names, auths, dates):
-            yield Commit(name = name.text, auth=auth.text, date=date.text)
+            yield Commit(name=name.text, auth=auth.text, date=date.text)
 
 
 class Repository:
@@ -68,24 +67,24 @@ class Repository:
         self._branches = list(self.setup_branches(url))
 
     @property
-    def name(self):
+    def name(self) -> str:
         return self._name
 
     @property
-    def url(self):
+    def url(self) -> str:
         return self._url
 
     @property
-    def branches(self):
+    def branches(self) ->list:
         return self._branches
 
-    def setup_branches(self, url):
+    def setup_branches(self, url)-> Branch:
         resp = requests.get(url + '/branches/')
         soup = BeautifulSoup(resp.text)
         branches = soup.findAll('a', {'class': 'branch-name css-truncate-target v-align-baseline width-fit mr-2 Details-content--shown'})
         users = soup.findAll('a', {'class': 'muted-link'})
         for branch, auth in zip(branches, users):
-            yield Branch(name = branch.text, auth = auth.text, url = self.url)
+            yield Branch(name=branch.text, auth=auth.text, url=self.url)
 
 
 class Repositories:

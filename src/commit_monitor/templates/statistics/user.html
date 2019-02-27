@@ -18,9 +18,10 @@
 
     <div class="container">
         {% for i in range(repositories|length) %}
+            <h1>Repository name: {{repositories[i].name}}</h1>
             {% for branch in repositories[i].branches %}
-                <h1>{{ branch.name }}</h1>
-                    {% if branch.commits|length != (None, []) %}
+                {% if branch.commits|length != 0 %}
+                <h3>Branch name: {{ branch.name }}</h3>
                         <table class="table table-striped">
                             <thead>
                                 <tr>
@@ -44,7 +45,7 @@
                                 {% endfor %}
                             </tbody>
                         </table>
-                    {% endif %}
+                {% endif %}
             {% endfor %}
         {% endfor %}
     </div>

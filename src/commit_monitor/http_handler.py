@@ -1,21 +1,29 @@
-import abc
 import requests
 
 from bs4 import BeautifulSoup
 
 
-REGEXES = {'commit_names': ('a', {'class': 'message js-navigation-open'}),
-           'commit_auth': ('a', {'class': 'commit-author tooltipped tooltipped-s user-mention'}),
+REGEXES = {'commit_names':
+           ('a', {'class': 'message js-navigation-open'}),
+           'commit_auth':
+           ('a',
+            {'class':
+             'commit-author tooltipped tooltipped-s user-mention'}),
            'commit_date': ('relative-time'),
-           'branches_names': ('a', {'class': 'branch-name css-truncate-target v-align-'
-                                             'baseline width-fit mr-2 Details-content--shown'}),
+           'branches_names':
+           ('a', {'class':
+                  'branch-name css-truncate-target v-align-'
+                  'baseline width-fit mr-2 Details-content--shown'}),
            'branches_users': ('a', {'class': 'muted-link'}),
            }
 
 
-GITLAB_REGEXES = {'commit_names': ('a', {'class': 'commit-row-message item-title'}),
-                  'commit_auth': ('a', {'class': 'commit-author-link has-tooltip'}),
-                  'branches_names': ('a', {'class': 'item-title str-truncated ref-name'}),
+GITLAB_REGEXES = {'commit_names':
+                  ('a', {'class': 'commit-row-message item-title'}),
+                  'commit_auth':
+                  ('a', {'class': 'commit-author-link has-tooltip'}),
+                  'branches_names':
+                  ('a', {'class': 'item-title str-truncated ref-name'}),
                   'branches_users': ('a', {'class': 'muted-link'}),
                   }
 
@@ -84,18 +92,18 @@ class Repository:
         self._branches = list(self.setup_branches(url))
 
     @property
-    def name(self) -> str:
+    def name(self):
         return self._name
 
     @property
-    def url(self) -> str:
+    def url(self):
         return self._url
 
     @property
-    def branches(self) ->list:
+    def branches(self):
         return self._branches
 
-    def setup_branches(self, url)-> Branch:
+    def setup_branches(self, url):
         resp = requests.get(url + '/branches/')
         soup = BeautifulSoup(resp.text)
         branches = soup.findAll(*self._rtype['branches_names'])
@@ -115,4 +123,3 @@ class Repositories:
     @property
     def container(self):
         return self._container
-

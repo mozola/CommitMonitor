@@ -21,6 +21,7 @@ setuptools.setup(
     install_requires = ['requests',
                         'flask',
                         'bs4',
+                        'flake8',
                         'pytest>=3.4.0',
                         'pytest-cov>=2.5.1',
     ],

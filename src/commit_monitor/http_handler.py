@@ -84,18 +84,18 @@ class Repository:
         self._branches = list(self.setup_branches(url))
 
     @property
-    def name(self) -> str:
+    def name(self):
         return self._name
 
     @property
-    def url(self) -> str:
+    def url(self):
         return self._url
 
     @property
-    def branches(self) ->list:
+    def branches(self):
         return self._branches
 
-    def setup_branches(self, url)-> Branch:
+    def setup_branches(self, url):
         resp = requests.get(url + '/branches/')
         soup = BeautifulSoup(resp.text)
         branches = soup.findAll(*self._rtype['branches_names'])

@@ -2,24 +2,26 @@
 {% block title%}CommitMonitor{% endblock %}
 {% block body %}
 
-<h1>User activities</h1>
-
-    <div class="container">
-        <div class="col-3">
-            <form method="POST">
-                <label for="username">Username</label>
-                <input name="username" id="username" required>
-                <input type="submit" value="Get activities">
-            </form>
+    <form method="POST">
+        <div class="form-group">
+            <div class="col-sm-2">
+                <label for="username">Git User name</label>
+            </div>
+            <div class="col-sm-7">
+                <input type="text" class="form-control" id="username" name="username" placeholder="Enter user name"/>
+            </div>
+            <div class="col-sm-3">
+                <button type="submit" class="btn btn-primary">Get user activities</button>
+            </div>
         </div>
-    </div>
-
+    </form>
 
     <div class="container">
         {% for i in range(repositories|length) %}
+            <h1>Repository name: {{repositories[i].name}}</h1>
             {% for branch in repositories[i].branches %}
-                <h1>{{ branch.name }}</h1>
-                    {% if branch.commits|length != (None, []) %}
+                {% if branch.commits|length != 0 %}
+                <h3>Branch name: {{ branch.name }}</h3>
                         <table class="table table-striped">
                             <thead>
                                 <tr>
@@ -43,7 +45,7 @@
                                 {% endfor %}
                             </tbody>
                         </table>
-                    {% endif %}
+                {% endif %}
             {% endfor %}
         {% endfor %}
     </div>

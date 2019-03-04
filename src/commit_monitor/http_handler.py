@@ -4,6 +4,22 @@ import requests
 from bs4 import BeautifulSoup
 
 
+REGEXES = {'commit_names': ('a', {'class': 'message js-navigation-open'}),
+           'commit_auth': ('a', {'class': 'commit-author tooltipped tooltipped-s user-mention'}),
+           'commit_date': ('relative-time'),
+           'branches_names': ('a', {'class': 'branch-name css-truncate-target v-align-'
+                                             'baseline width-fit mr-2 Details-content--shown'}),
+           'branches_users': ('a', {'class': 'muted-link'}),
+           }
+
+
+GITLAB_REGEXES = {'commit_names': ('a', {'class': 'commit-row-message item-title'}),
+                  'commit_auth': ('a', {'class': 'commit-author-link has-tooltip'}),
+                  'branches_names': ('a', {'class': 'item-title str-truncated ref-name'}),
+                  'branches_users': ('a', {'class': 'muted-link'}),
+                  }
+
+
 class Commit:
 
     def __init__(self, auth, name, date):
@@ -36,7 +52,6 @@ class Branch:
         self._name = name
         self._auth = auth
         self._commits = list(self.setup_commits(url, name))
-    
 
     @property
     def name(self):
@@ -53,18 +68,19 @@ class Branch:
     def setup_commits(self, url, name):
         resp = requests.get('{}/commits/{}'.format(url, name))
         soup = BeautifulSoup(resp.text)
-        names = soup.find_all('a', {'class': 'message js-navigation-open'})
-        auths = soup.find_all('a', {'class': 'commit-author tooltipped tooltipped-s user-mention'})
+        names = soup.find_all(*REGEXES['commit_names'])
+        auths = soup.find_all(*REGEXES['commit_auth'])
         dates = soup.find_all('relative-time')
         for name, auth, date in zip(names, auths, dates):
-            yield Commit(name = name.text, auth=auth.text, date=date.text)
+            yield Commit(name=name.text, auth=auth.text, date=date.text)
 
 
 class Repository:
 
-    def __init__(self, name=None, url=None):
+    def __init__(self, name=None, url=None, rtype=REGEXES):
         self._name = name
         self._url = url
+        self._rtype = rtype
         self._branches = list(self.setup_branches(url))
 
     @property
@@ -82,10 +98,10 @@ class Repository:
     def setup_branches(self, url):
         resp = requests.get(url + '/branches/')
         soup = BeautifulSoup(resp.text)
-        branches = soup.findAll('a', {'class': 'branch-name css-truncate-target v-align-baseline width-fit mr-2 Details-content--shown'})
-        users = soup.findAll('a', {'class': 'muted-link'})
+        branches = soup.findAll(*self._rtype['branches_names'])
+        users = soup.findAll(*self._rtype['branches_users'])
         for branch, auth in zip(branches, users):
-            yield Branch(name = branch.text, auth = auth.text, url = self.url)
+            yield Branch(name=branch.text, auth=auth.text, url=self.url)
 
 
 class Repositories:

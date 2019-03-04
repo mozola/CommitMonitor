@@ -1,0 +1,16 @@
+src/__pycache__/
+src/commit_monitor/__pycache__/
+.eggs/
+.idea/
+Commit_Monitor.egg-info/
+src/commit_monitor/__init__.pyc
+src/commit_monitor/__pycache__/
+src/commit_monitor/http_handler.pyc
+tests/__init__.pyc
+tests/__pycache__/
+tests/mt/__init__.pyc
+tests/mt/__pycache__/
+tests/ut/__init__.pyc
+tests/ut/__pycache__/
+tests/ut/test_handler.py~
+tox.ini~

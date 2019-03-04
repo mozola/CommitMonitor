@@ -18,11 +18,10 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    install_requires = ['requests',
-                        'flask',
-                        'bs4',
-                        'flake8',
-                        'pytest>=3.4.0',
-                        'pytest-cov>=2.5.1',
-    ],
-)
+    install_requires=['requests',
+                      'flask',
+                      'bs4',
+                      'flake8',
+                      'sphinx',
+                      'pytest>=3.4.0',
+                      'pytest-cov>=2.5.1'])

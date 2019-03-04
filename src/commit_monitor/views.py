@@ -1,19 +1,17 @@
 from flask import Flask
-from flask import render_template, url_for
+from flask import render_template
 from flask import session
 from flask import request, redirect
 from flask import url_for
-import requests
-from datetime import timedelta
 
 from datetime import timedelta
-from bs4 import BeautifulSoup
+
 from .http_handler import Repository, Repositories
 
 
 app = Flask(__name__)
 
-app.config['PERMANENT_SESSION_LIFETIME'] =  timedelta(minutes=5)
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=5)
 app.config['SECRET_KEY'] = b'123'
 
 """ Temporary configuration added to views """
@@ -26,7 +24,7 @@ app.config.update(
 )
 
 
-app.config['PERMANENT_SESSION_LIFETIME'] =  timedelta(minutes=5)
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=5)
 app.config['SECRET_KEY'] = b'123'
 
 
@@ -94,7 +92,7 @@ def add_repository():
 @app.route('/repository/subscribed')
 def subscribed():
     return render_template('repository/subscribed.html',
-                           repositories = all_repositories._container)
+                           repositories=all_repositories._container)
 
 
 @app.route('/repository/modify')
@@ -117,7 +115,8 @@ def statistics_project():
         return render_template('statistics/projects.html',
                                repositories=repositories,
                                project_name=project_name)
-    return render_template('statistics/projects.html', repositories=repositories)
+    return render_template('statistics/projects.html',
+                           repositories=repositories)
 
 
 @app.route('/statistics/user', methods=['POST', 'GET'])

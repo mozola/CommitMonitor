@@ -1,31 +1,41 @@
 import requests
+import abc
+from enum import Enum
 
 from bs4 import BeautifulSoup
 
 
-REGEXES = {'commit_names':
-           ('a', {'class': 'message js-navigation-open'}),
-           'commit_auth':
-           ('a',
-            {'class':
-             'commit-author tooltipped tooltipped-s user-mention'}),
-           'commit_date': ('relative-time'),
-           'branches_names':
-           ('a', {'class':
-                  'branch-name css-truncate-target v-align-'
-                  'baseline width-fit mr-2 Details-content--shown'}),
-           'branches_users': ('a', {'class': 'muted-link'}),
-           }
+class User(Enum):
+    username = 'molo226'
+    password = 'atb7jwnd'
 
 
-GITLAB_REGEXES = {'commit_names':
-                  ('a', {'class': 'commit-row-message item-title'}),
-                  'commit_auth':
-                  ('a', {'class': 'commit-author-link has-tooltip'}),
-                  'branches_names':
-                  ('a', {'class': 'item-title str-truncated ref-name'}),
-                  'branches_users': ('a', {'class': 'muted-link'}),
-                  }
+class RepositoryInterface(metaclass=abc.ABCMeta):
+
+    def __init__(self, url: str):
+        self._url = url
+        self._username = User.username
+        self._password = User.password
+
+    @property
+    def url(self):
+        return self._url
+
+    @property
+    def username(self):
+        return self._username
+
+    @abc.abstractmethod
+    def get_commits(self):
+        return NotImplementedError
+
+    @abc.abstractmethod
+    def get_branches(self):
+        return NotImplementedError
+
+    @abc.abstractmethod
+    def get_requests(self):
+        return NotImplementedError
 
 
 class Commit:
@@ -61,18 +71,6 @@ class Branch:
         self._auth = auth
         self._commits = list(self.setup_commits(url, name))
 
-    @property
-    def name(self):
-        return self._name
-
-    @property
-    def auth(self):
-        return self._auth
-
-    @property
-    def commits(self):
-        return self._commits
-
     def setup_commits(self, url, name):
         resp = requests.get('{}/commits/{}'.format(url, name))
         soup = BeautifulSoup(resp.text)
@@ -83,21 +81,10 @@ class Branch:
             yield Commit(name=name.text, auth=auth.text, date=date.text)
 
 
-class Repository:
+class Repository(RepositoryInterface):
 
-    def __init__(self, name=None, url=None, rtype=REGEXES):
-        self._name = name
-        self._url = url
-        self._rtype = rtype
-        self._branches = list(self.setup_branches(url))
-
-    @property
-    def name(self):
-        return self._name
-
-    @property
-    def url(self):
-        return self._url
+    def __init__(self, url=None):
+        super().__init__(url=url)
 
     @property
     def branches(self):

@@ -6,7 +6,8 @@ from flask import url_for
 
 from datetime import timedelta
 
-from .http_handler import Repository, Repositories
+from .handler import Repositories
+from src.commit_monitor.repository import Repository
 
 
 app = Flask(__name__)
@@ -77,14 +78,16 @@ def register():
 @app.route('/repository/add', methods=['POST', 'GET'])
 def add_repository():
     if request.method == 'POST':
-        repository = Repository(name=request.form['name'],
-                                url=request.form['url'])
-
+        token = request.form['user']
+        organisation = request.form['organisation']
+        project_name = request.form['name']
+        repository = Repository(token=token)
+        repository.open(organisation, project_name)
         if repository.name not in [i.name for i in all_repositories.container]:
             all_repositories.add(repository)
 
         return render_template('repository/new.html', state=False,
-                               repositories=all_repositories._container)
+                               repositories=all_repositories.container)
 
     return render_template('repository/new.html', state=True)
 
@@ -111,10 +114,11 @@ def statistics_project():
     repositories = all_repositories._container
     if request.method == 'POST':
         project_name = request.form['project_name']
-        print(repositories)
+
         return render_template('statistics/projects.html',
                                repositories=repositories,
                                project_name=project_name)
+
     return render_template('statistics/projects.html',
                            repositories=repositories)
 

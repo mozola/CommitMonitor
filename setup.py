@@ -23,5 +23,6 @@ setuptools.setup(
                       'bs4',
                       'flake8',
                       'sphinx',
+                      'PyGithub',
                       'pytest>=3.4.0',
                       'pytest-cov>=2.5.1'])

@@ -7,19 +7,30 @@
 		<form method="POST">
 
 			<div class="form-group">
+    			<label for="user">User token</label>
+    			<input type="text" class="form-control"
+					   id="user" name="user"
+					   placeholder="Enter token generated from github">
+  			</div>
+
+			<div class="form-group">
+    			<label for="organisation">Repository organisation</label>
+    			<input type="text" class="form-control"
+					   id="organisation" name="organisation"
+					   placeholder="Enter organisation name">
+  			</div>
+
+			<div class="form-group">
     			<label for="name">Repository name</label>
-    			<input type="text" class="form-control" id="name" name="name" aria-describedby="emailHelp" placeholder="Enter name">
-  			</div>
-
-			<div class="form-group">
-    			<label for="url">Repository Url</label>
-    			<input type="text" class="form-control" id="url" name="url" placeholder="Enter url repository">
+    			<input type="text" class="form-control"
+					   id="name" name="name"
+					   placeholder="Enter repository name">
   			</div>
 
 
 			<div class="form-group">
-    			<label for="exampleFormControlSelect1">Select repository type</label>
-    			<select class="form-control" id="exampleFormControlSelect1">
+    			<label for="type">Select repository type</label>
+    			<select class="form-control" id="type">
       				<option>GitHub</option>
       				<option>GitLab</option>
 					<option>Bitbucket</option>
@@ -35,27 +46,29 @@
 		<h1>All of your subscribed repositories</h1>
 		<div class="container">
 			{% for i in range(repositories|length) %}
-				<h1>{{ repositories[i].name }}</h1>
-
 				<table class="table table-striped">
 					<thead>
 						<tr>
-							<td>LP</td>
 							<td>Branch name</td>
 							<td>User</td>
 							<td>Date</td>
-							<td>Commits</td>
+							<td>Commit url</td>
+							<td>Commit</td>
+							<td>Protected</td>
+							<td>Url:</td>
 						</tr>
 					</thead>
 
 					<tbody>
 						{% for branch in repositories[i].branches %}
 						<tr>
-							<td>{{ i }}</td>
 							<td>{{ branch.name }}</td>
-							<td>{{ branch.auth }}</td>
+							<td>{{ branch.author }}</td>
 							<td>{{ session['username'] }}</td>
-							<td>{{ branch.commits|length }}</td>
+							<td>{{ branch.html_url }}</td>
+							<td>{{ branch.commits }}</td>
+							<td>{{ branch.protected }}</td>
+							<td>{{ branch.url }}</td>
 						</tr>
 						{% endfor %}
 					</tbody>

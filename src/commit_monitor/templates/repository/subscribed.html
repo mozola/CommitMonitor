@@ -1,7 +1,30 @@
 {% extends "base/base.html" %}
 {% block title%}New{% endblock %}
 {% block body %}
-    <h1>All of your subscribed repositories</h1>
+
+    <form method="POST">
+
+        <div class="form-group">
+    		<label for="branch_keywords">Branch keywords</label>
+    		<input type="text" class="form-control" id="branch_keywords" name="branch_keywords"
+                   aria-describedby="emailHelp" placeholder="Enter branch keywords">
+  		</div>
+
+        <div class="form-group">
+    		<label for="commit_keywords">Commit keywords</label>
+    		<input type="text" class="form-control" id="commit_keywords" name="commit_keywords"
+                   aria-describedby="emailHelp" placeholder="Enter commit keywords">
+  		</div>
+
+        <div class="form-group">
+    		<label for="merge_keywords">Merge keywords</label>
+    		<input type="text" class="form-control" id="merge_keywords" name="merge_keywords"
+                   aria-describedby="emailHelp" placeholder="Enter merge keywords">
+  		</div>
+
+		<button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
     <div class="container">
         {% for i in range(repositories|length) %}
             <h1>{{ repositories[i].name }}</h1>
@@ -19,16 +42,20 @@
 
                 <tbody>
                     {% for branch in repositories[i].branches %}
-                    <tr>
-                        <td>{{ i }}</td>
-                        <td>{{ branch.name }}</td>
-                        <td>{{ branch.auth }}</td>
-                        <td>{{ session['username'] }}</td>
-                        <td>{{ branch.commits|length }}</td>
-                    </tr>
+                        <tr bgcolor="#FF0000">
+
+                            <td>{{ i }}</td>
+                            <td>{{ branch.name }}</td>
+                            <td>{{ branch.auth }}</td>
+                            <td>{{ session['username'] }}</td>
+                            <td>{{ branch.commits|length }}</td>
+                        </tr>
+
+
                     {% endfor %}
                 </tbody>
                 
             </table>
         {% endfor %}
+    </div>
 {% endblock %}

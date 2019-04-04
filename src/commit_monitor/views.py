@@ -89,10 +89,23 @@ def add_repository():
     return render_template('repository/new.html', state=True)
 
 
-@app.route('/repository/subscribed')
+@app.route('/repository/subscribed', methods=['POST', 'GET'])
 def subscribed():
+    if request.method == 'POST':
+        branch_keywords = request.form['branch_keywords']
+        commit_keywords = request.form['commit_keywords']
+        merges_keywords = request.form['merge_keywords']
+
+        for repository in all_repositories.container:
+            for branch in repository.branches:
+                repository._state = branch_keywords in branch.name
+
+        return render_template('repository/subscribed.html',
+                               repositories=all_repositories._container)
+
     return render_template('repository/subscribed.html',
                            repositories=all_repositories._container)
+
 
 
 @app.route('/repository/modify')

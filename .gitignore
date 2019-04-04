@@ -14,3 +14,6 @@ tests/ut/__init__.pyc
 tests/ut/__pycache__/
 tests/ut/test_handler.py~
 tox.ini~
+.idea/
+src/__pycache__/
+src/commit_monitor/__pycache__/

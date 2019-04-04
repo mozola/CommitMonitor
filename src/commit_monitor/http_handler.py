@@ -85,8 +85,9 @@ class Branch:
 
 class Repository:
 
-    def __init__(self, name=None, url=None, rtype=REGEXES):
+    def __init__(self, name=None, url=None, rtype=REGEXES, state = True):
         self._name = name
+        self._state = state
         self._url = url
         self._rtype = rtype
         self._branches = list(self.setup_branches(url))

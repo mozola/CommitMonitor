@@ -22,6 +22,7 @@ setuptools.setup(
                       'flask',
                       'bs4',
                       'flake8',
+                      'dataset',
                       'sphinx',
                       'pytest>=3.4.0',
                       'pytest-cov>=2.5.1'])

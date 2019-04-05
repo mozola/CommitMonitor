@@ -1,11 +1,10 @@
-from flask import Flask
-from flask import render_template
-from flask import session
-from flask import request, redirect
-from flask import url_for
+from flask import (Flask, render_template,
+                   session, request,
+                   redirect, url_for, abort)
 
 from datetime import timedelta
 
+from .auth import User
 from .http_handler import Repository, Repositories
 
 
@@ -14,24 +13,6 @@ app = Flask(__name__)
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=5)
 app.config['SECRET_KEY'] = b'123'
 
-""" Temporary configuration added to views """
-app.config.update(
-    SECRET_KEY=b'123',
-    DEBUG=False,
-    TESTING=False,
-    PROPAGATE_EXCEPTIONS=None,
-    PERMANENT_SESSION_LIFETIME=timedelta(minutes=5),
-)
-
-
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=5)
-app.config['SECRET_KEY'] = b'123'
-
-
-""" Temporary dictionary to login user """
-USER_DATE = {'username': 'admin',
-             'password': 'admin'}
-
 
 """ All subscribed repositories """
 all_repositories = Repositories()
@@ -39,38 +20,48 @@ all_repositories = Repositories()
 
 @app.route('/')
 def index():
-    """
-        Major page of project
-    """
     return render_template('base/index.html')
 
 
 @app.route('/auth/login', methods=['POST', 'GET'])
 def login():
-    """
-        View to login user and setup session
-    """
+    user = User()
+    state = True
     if request.method == 'POST':
-        if (request.form['username'] == USER_DATE['username']
-                and request.form['password'] == USER_DATE['password']):
-            session['username'] = request.form['username']
+
+        if user.validate(request.form['username'],
+                         request.form['password']):
+
+            session['username'] = user.username
             session.permanent = True
             return redirect(url_for('index'))
+        state = False
 
-    return render_template('auth/login.html')
+    return render_template('auth/login.html', state=state)
 
 
 @app.route('/auth/logout')
 def logout():
-    """
-        Logout user and remove him from session
-    """
     session.pop('username', None)
     return render_template('auth/logout.html')
 
 
-@app.route('/auth/register')
+@app.route('/auth/register', methods=['POST', 'GET'])
 def register():
+
+    if request.method == 'POST':
+        user = User()
+        username = request.form['username']
+        password = request.form['password']
+        email = request.form['email']
+        login = request.form['login']
+
+        state = user.add(username, password, login, email)
+        if state:
+            return redirect(url_for('index'))
+        else:
+            abort(401)
+
     return render_template('auth/register.html')
 
 
@@ -91,21 +82,8 @@ def add_repository():
 
 @app.route('/repository/subscribed', methods=['POST', 'GET'])
 def subscribed():
-    if request.method == 'POST':
-        branch_keywords = request.form['branch_keywords']
-        commit_keywords = request.form['commit_keywords']
-        merges_keywords = request.form['merge_keywords']
-
-        for repository in all_repositories.container:
-            for branch in repository.branches:
-                repository._state = branch_keywords in branch.name
-
-        return render_template('repository/subscribed.html',
-                               repositories=all_repositories._container)
-
     return render_template('repository/subscribed.html',
                            repositories=all_repositories._container)
-
 
 
 @app.route('/repository/modify')
@@ -124,7 +102,6 @@ def statistics_project():
     repositories = all_repositories._container
     if request.method == 'POST':
         project_name = request.form['project_name']
-        print(repositories)
         return render_template('statistics/projects.html',
                                repositories=repositories,
                                project_name=project_name)
@@ -143,6 +120,26 @@ def statistics_user():
     return render_template('statistics/user.html')
 
 
+@app.route('/users/teams/all')
+def users_teams():
+    return render_template('users/teams_all.html')
+
+
+@app.route('/users/teams/users')
+def users_users():
+    return render_template('users/teams_user.html')
+
+
+@app.route('/users/teams/new')
+def users_new_team():
+    return render_template('/users/teams_form.html')
+
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('errors/404.html'), 404
+
+
+@app.errorhandler(401)
+def authorisation_error(e):
+    return render_template('errors/401.html'), 401

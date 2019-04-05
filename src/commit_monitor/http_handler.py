@@ -1,7 +1,7 @@
 import requests
 
 from bs4 import BeautifulSoup
-
+from .auth import DATABASE
 
 REGEXES = {'commit_names':
            ('a', {'class': 'message js-navigation-open'}),
@@ -85,7 +85,7 @@ class Branch:
 
 class Repository:
 
-    def __init__(self, name=None, url=None, rtype=REGEXES, state = True):
+    def __init__(self, name=None, url=None, rtype=REGEXES, state=True):
         self._name = name
         self._state = state
         self._url = url
@@ -112,11 +112,18 @@ class Repository:
         for branch, auth in zip(branches, users):
             yield Branch(name=branch.text, auth=auth.text, url=self.url)
 
+    def __repr__(self):
+        return f'<repository> {self.name}, {self.url}'
+
+    def dict(self):
+        return {'name': self.name, 'url': self.url}
+
 
 class Repositories:
 
     def __init__(self):
         self._container = []
+        self._database = DATABASE['subscribes']
 
     def add(self, repository):
         self._container.append(repository)

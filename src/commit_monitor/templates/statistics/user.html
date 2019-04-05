@@ -2,6 +2,12 @@
 {% block title%}CommitMonitor{% endblock %}
 {% block body %}
 
+<style>
+    h1 {
+        color:black;
+    }
+</style>
+
     <form method="POST">
         <div class="form-group">
             <div class="col-sm-2">
@@ -15,36 +21,41 @@
             </div>
         </div>
     </form>
-
+    <br><br><br>
     <div class="container">
         {% for i in range(repositories|length) %}
-            <h1>Repository name: {{repositories[i].name}}</h1>
+
             {% for branch in repositories[i].branches %}
                 {% if branch.commits|length != 0 %}
-                <h3>Branch name: {{ branch.name }}</h3>
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <td>LP</td>
-                                    <td>Commit name</td>
-                                    <td>User</td>
-                                    <td>Date</td>
-                                </tr>
-                            </thead>
 
-                            <tbody>
-                                {% for commit in branch.commits %}
-                                    {% if commit.auth == user %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><h3>Branch {{ branch.name }} in {{repositories[i].name}}</h3></div>
+                        <div class="panel-body">
+                            <table class="table table-striped">
+                                <thead>
                                     <tr>
-                                        <td>{{ i + 1 }}</td>
-                                        <td>{{ commit.name }}</td>
-                                        <td>{{ commit.auth }}</td>
-                                        <td>{{ commit.date }}</td>
+                                        <td>LP</td>
+                                        <td>Commit name</td>
+                                        <td>User</td>
+                                        <td>Date</td>
                                     </tr>
-                                    {% endif %}
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                                </thead>
+
+                                <tbody>
+                                    {% for commit in branch.commits %}
+                                        {% if commit.auth == user %}
+                                        <tr>
+                                            <td>{{ i + 1 }}</td>
+                                            <td>{{ commit.name }}</td>
+                                            <td>{{ commit.auth }}</td>
+                                            <td>{{ commit.date }}</td>
+                                        </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 {% endif %}
             {% endfor %}
         {% endfor %}

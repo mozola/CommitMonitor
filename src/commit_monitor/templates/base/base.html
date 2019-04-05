@@ -5,6 +5,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 </head>
 
 <style>
@@ -28,10 +29,26 @@
         color: white;
     }
 
+    .centerform {
+        width: 50%;
+        bottom: auto;
+        top: 60%;
+    }
+
+    .absolute {
+      margin-bottom: 0px;
+    }
+
+    {% block styles %}{% endblock %}
+
 </style>
 
-<body background="http://www.valleyhealthcolumbus.com/wp-content/uploads/2015/08/blue-gradient-background.png">
-  <nav class="navbar navbar-inverse">
+<script type="text/javascript">
+  {% block script %}{% endblock %}
+</script>
+
+<body background="https://www.certasoftware.pl/wp-content/uploads/2015/11/Grey-Background-BLANK.png">
+  <nav class="navbar navbar-inverse absolute">
     <div class="container-fluid">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -63,6 +80,14 @@
               </ul>
             </li>
             <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Teams<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="/users/teams/all">Display</a></li>
+                <li><a href="/users/teams/users">User</a></li>
+                <li><a href="/users/teams/new">Add team</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" href="#">Diagrams<span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a href="/diagrams/projects">Projects</a></li>
@@ -84,11 +109,9 @@
       </div>
     </div>
   </nav>
-
-  <br><br>
-  <hr>
   {% block body %}
   {% endblock %}
+
 </body>
 
 </html>

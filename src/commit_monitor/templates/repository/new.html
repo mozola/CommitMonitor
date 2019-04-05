@@ -1,34 +1,39 @@
 {% extends "base/base.html" %}
-{% block title%}New{% endblock %}
+
+
+{% block title%}Add new repository{% endblock %}
+
+
 {% block body %}
-
 	{% if state %}
-		<h1>New repository page</h1>
-		<form method="POST">
+		<center>
+		<h1>Subscribe new repository</h1>
+
+		<form class="centerform" method="POST">
 
 			<div class="form-group">
-    			<label for="name">Repository name</label>
-    			<input type="text" class="form-control" id="name" name="name" aria-describedby="emailHelp" placeholder="Enter name">
+    			<input type="text" class="form-control"
+					   id="name" name="name"
+					   aria-describedby="emailHelp"
+					   placeholder="Enter name of repository">
   			</div>
 
 			<div class="form-group">
-    			<label for="url">Repository Url</label>
-    			<input type="text" class="form-control" id="url" name="url" placeholder="Enter url repository">
+    			<input type="text" class="form-control"
+					   id="url" name="url" placeholder="Enter url to repository">
   			</div>
 
-
 			<div class="form-group">
-    			<label for="exampleFormControlSelect1">Select repository type</label>
     			<select class="form-control" id="exampleFormControlSelect1">
       				<option>GitHub</option>
       				<option>GitLab</option>
 					<option>Bitbucket</option>
-
 		    	</select>
 			</div>
 
-			<button type="submit" class="btn btn-primary">Subscribe repository</button>
+  			<button type="submit" class="btn btn-default btn-lg btn-block">Add subscription</button>
 		</form>
+		</center>
 
 	{% else %}
 

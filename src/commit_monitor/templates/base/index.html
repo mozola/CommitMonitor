@@ -1,0 +1,59 @@
+{% extends "base/base.html" %}
+{% block title%}CommitMonitor{% endblock %}
+
+
+{% block styles %}
+    .carousel-container {
+          height: 100%;
+          width: 100%;
+          padding: 0px;
+    }
+
+    .carousel-caption {
+        top: 0;
+        bottom: auto;
+        top: 60%;
+    }
+
+    .carousel-caption h1 {
+      font-size: 100px;
+      padding: 10px;
+      font-family: "Times New Roman", Times, serif;
+    }
+
+    .carousel-caption p {
+      font-size: 20px;
+      text-align: justify;
+      font-family: "Times New Roman", Times, serif;
+    }
+
+{% endblock %}
+
+
+{% block body %}
+<div class="container carousel-container">
+    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+          <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        </ol>
+        <div class="carousel-inner">
+          <div class="item active carousel-container">
+            <img src="https://wallpaperplay.com/walls/full/8/0/4/71462.jpg" alt="Los Angeles">
+            <div class="carousel-caption">
+              <h1>Commit Monitor</h1>
+              <p>
+                Commit monitor is a web application created to users who want to measure a project activities
+                to check git flow and which user have more commits and MR-s. It's very easy to use, user should only
+                subscribe some git project and he have information about his and another activities. We have diagrams and
+                tabels to display information about project. If some team have some regex to check mr-s names o commits names
+                we can just ours program to check names, or sctucture of mr, commit.
+              </p>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

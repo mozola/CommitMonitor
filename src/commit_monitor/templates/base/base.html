@@ -1,0 +1,117 @@
+<html lang="en">
+
+<head>
+  <title>{% block title %}{% endblock %}</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+</head>
+
+<style>
+  .topnav-left {
+        float: left;
+        margin: 15px;
+        font-size: 20px;
+    }
+
+    .topnav-right {
+        font-size: 20px;
+        margin: 15px;
+        float: right;
+    }
+
+    p {
+        color: white;
+    }
+
+    h1 {
+        color: white;
+    }
+
+    .centerform {
+        width: 50%;
+        bottom: auto;
+        top: 60%;
+    }
+
+    .absolute {
+      margin-bottom: 0px;
+    }
+
+    {% block styles %}{% endblock %}
+
+</style>
+
+<script type="text/javascript">
+  {% block script %}{% endblock %}
+</script>
+
+<body background="https://www.certasoftware.pl/wp-content/uploads/2015/11/Grey-Background-BLANK.png">
+  <nav class="navbar navbar-inverse absolute">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">CommitMonitor</a>
+      </div>
+      <div class="collapse navbar-collapse" id="myNavbar">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="#">About</a></li>
+          {% if session['username']%}
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Repositories<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="/repository/add">Add new</a></li>
+                <li><a href="'/repository/modify'">Modify</a></li>
+                <li><a href="/repository/subscribed">Subscribed</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Statistics<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="/statistics/user">User</a></li>
+                <li><a href="/statistics/projects">Projects</a></li>
+                <li><a href="/statistics/projects">Team</a></li>
+                <li><a href="/statistics/projects">Rewerts</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Teams<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="/users/teams/all">Display</a></li>
+                <li><a href="/users/teams/users">User</a></li>
+                <li><a href="/users/teams/new">Add team</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Diagrams<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="/diagrams/projects">Projects</a></li>
+                <li><a href="/diagrams/activity">Activity</a></li>
+                <li><a href="/diagrams/team">Team</a></li>
+                <li><a href="/diagrams/rewerts">Rewerts</a></li>
+              </ul>
+            </li>
+          {% endif %}
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          {% if session['username']%}
+            <li><a href="/auth/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+          {% else %}
+            <li><a href="/auth/register"><span class="glyphicon glyphicon-user"></span> Register</a></li>
+            <li><a href="/auth/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+  {% block body %}
+  {% endblock %}
+
+</body>
+
+</html>

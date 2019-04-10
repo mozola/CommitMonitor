@@ -1,0 +1,88 @@
+{% extends "base/base.html" %}
+{% block title%}Subscribed repositories{% endblock %}
+
+
+{% block styles %} h1 {color:black;}{% endblock %}
+
+
+{% block script %}
+  window.onload = function () {
+        {% for i in range(repositories|length) %}
+        {% for branch in repositories[i].branches %}
+
+        new Chart(document.getElementById("{{branch.name}}-{{i}}"), {
+            type: 'doughnut',
+            data: {
+              labels: ["{{branch.name}}", "Rest commits"],
+              datasets: [
+                {
+                  label: "Population (millions)",
+                  backgroundColor: ["#3e95cd", "#3cba9f"],
+                  data: [{{ branch.commits|length }}, {{repositories[i].branches|length}}]
+                }
+              ]
+            },
+            options: {
+              title: {
+                display: true,
+                text: 'Branch name {{branch.name}} in {{repositories[i].name}}'
+              }
+            }
+        });
+        {% endfor %}
+        {% endfor %}
+    }
+{% endblock %}
+
+
+{% block body %}
+    <div class="container">
+
+        {% for i in range(repositories|length) %}
+
+        <div class="panel panel-default">
+            <div class="panel-heading"><h1>Repository name {{repositories[i].name}}</h1></div>
+                <div class="panel-body">
+
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <td>LP</td>
+                                <td>Branch name</td>
+                                <td>User</td>
+                                <td>Date</td>
+                                <td>Commits</td>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for branch in repositories[i].branches %}
+                                <tr>
+                                    <td>{{ i }}</td>
+                                    <td>{{ branch.name }}</td>
+                                    <td>{{ branch.auth }}</td>
+                                    <td>04.05.2018</td>
+                                    <td>{{ branch.commits|length }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+
+                <div class="panel-heading"><h1>Branches diagrams</h1></div>
+
+                <div class="row">
+                    {% for branch in repositories[i].branches %}
+                        <div class="col-xs-4">
+                            <canvas id="{{branch.name}}-{{i}}" ></canvas>
+                        </div>
+                    {% endfor %}
+                </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends "base/base.html" %}
+{% block title%}CommitMonitor{% endblock %}
+{% block body %}
+
+<style>
+    .row-blocks {
+        margin-bottom: 3%;
+    }
+</style>
+
+<div class="container">
+
+    <div class="row row-blocks">
+        <form method="POST">
+            <div class="form-group">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control"
+                           id="project_name" name="project_name"
+                           placeholder="Enter project name"/>
+                </div>
+                <div class="col-sm-3">
+                    <button type="submit" class="btn btn-primary">Get project activities</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="row">
+        {% for i in range(repositories|length) %}
+            {% if project_name == repositories[i].name %}
+                {% for branch in repositories[i].branches %}
+                    {% if branch.commits|length != 0 %}
+                        <div class="panel panel-default">
+                            <div class="panel-heading"><h3>Branch name {{ branch.name }}</h3></div>
+                            <div class="panel-body">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <td>LP</td>
+                                            <td>Commit name</td>
+                                            <td>User</td>
+                                            <td>Date</td>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    {% for commit in branch.commits %}
+                                        <tr>
+                                            <td>{{ i + 1 }}</td>
+                                            <td>{{ commit.name }}</td>
+                                            <td>{{ commit.auth }}</td>
+                                            <td>{{ commit.date }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+
+
+<br><br>
+
+
+{% endblock %}

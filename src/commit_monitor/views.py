@@ -23,6 +23,9 @@ def index():
     return render_template('base/index.html')
 
 
+# Authorisation and register user
+
+
 @app.route('/auth/login', methods=['POST', 'GET'])
 def login():
     user = User()
@@ -65,8 +68,11 @@ def register():
     return render_template('auth/register.html')
 
 
+# All about repositories
+
+
 @app.route('/repository/add', methods=['POST', 'GET'])
-def add_repository():
+def repository_subscribe():
     if request.method == 'POST':
         repository = Repository(name=request.form['name'],
                                 url=request.form['url'])
@@ -74,39 +80,52 @@ def add_repository():
         if repository.name not in [i.name for i in all_repositories.container]:
             all_repositories.add(repository)
 
-        return render_template('repository/new.html', state=False,
+        return render_template('repository/repository_subscribe.html', state=False,
                                repositories=all_repositories._container)
 
-    return render_template('repository/new.html', state=True)
+    return render_template('repository/repository_subscribe.html', state=True)
 
 
 @app.route('/repository/subscribed', methods=['POST', 'GET'])
-def subscribed():
-    return render_template('repository/subscribed.html',
+def repository_subscribed():
+    return render_template('repository/repository_subscribed.html',
                            repositories=all_repositories._container)
 
 
-@app.route('/repository/modify')
-def modify():
-    return render_template('repository/modify.html')
+@app.route('/repository/merge_requests')
+def repository_merge_requests():
+    return render_template('repository/repository_merge_requests.html')
 
 
-@app.route('/repository/commits')
-def commits():
-    return render_template('repository/commits.html',
+@app.route('/repository/labels')
+def repository_labels():
+    return render_template('repository/repository_labels.html')
+
+
+@app.route('/repository/workflows')
+def repository_workflows():
+    return render_template('repository/repository_workflows.html')
+
+
+@app.route('/repository/issues')
+def repository_issues():
+    return render_template('repository/repository_issues.html',
                            repositories=all_repositories._container)
 
 
-@app.route('/statistics/projects', methods=['POST', 'GET'])
-def statistics_project():
+@app.route('/repository/commits', methods=['POST', 'GET'])
+def repository_commits():
     repositories = all_repositories._container
     if request.method == 'POST':
         project_name = request.form['project_name']
-        return render_template('statistics/projects.html',
+        return render_template('repository/repository_commits.html',
                                repositories=repositories,
                                project_name=project_name)
-    return render_template('statistics/projects.html',
+    return render_template('repository/repository_commits.html',
                            repositories=repositories)
+
+
+# Statistics about project
 
 
 @app.route('/statistics/user', methods=['POST', 'GET'])
@@ -118,6 +137,9 @@ def statistics_user():
                                repositories=repositories,
                                user=user)
     return render_template('statistics/user.html')
+
+
+# Teams and users
 
 
 @app.route('/users/teams/all')

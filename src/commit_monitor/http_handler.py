@@ -4,18 +4,25 @@ from bs4 import BeautifulSoup
 from .auth import DATABASE
 
 REGEXES = {'commit_names':
-           ('a', {'class': 'message js-navigation-open'}),
+                ('a', {'class':
+                    'message js-navigation-open'}),
            'commit_auth':
-           ('a',
-            {'class':
-             'commit-author tooltipped tooltipped-s user-mention'}),
+                ('a', {'class':
+                    'commit-author tooltipped tooltipped-s user-mention'}),
            'commit_date': ('relative-time'),
            'branches_names':
-           ('a', {'class':
-                  'branch-name css-truncate-target v-align-'
-                  'baseline width-fit mr-2 Details-content--shown'}),
-           'branches_users': ('a', {'class': 'muted-link'}),
-           }
+                ('a', {'class':
+                     'branch-name css-truncate-target v-align-'
+                     'baseline width-fit mr-2 Details-content--shown'}),
+           'branches_users': 
+                ('a', {'class': 'muted-link'}),
+           'repository_labels': 
+                ('span', {"class": "label-name"}),
+           'repository_pull_request_name':
+                ('a', {'data-hovercard-type':'pull_request'}),
+           'repository_pull_request_date':
+                ('relative-time'),
+}
 
 
 GITLAB_REGEXES = {'commit_names':
@@ -83,6 +90,15 @@ class Branch:
             yield Commit(name=name.text, auth=auth.text, date=date.text)
 
 
+class PullRequest:
+
+    def __init__(self, name, author, date, labels):
+        self.name = name
+        self.author = author
+        self.date = date
+        self.labels = labels
+
+
 class Repository:
 
     def __init__(self, name=None, url=None, rtype=REGEXES, state=True):
@@ -91,6 +107,8 @@ class Repository:
         self._url = url
         self._rtype = rtype
         self._branches = list(self.setup_branches(url))
+        self._labels = list(self.setup_labels(url))
+        self._pull_requests = list(self.setup_pull_request(url))
 
     @property
     def name(self):
@@ -101,16 +119,40 @@ class Repository:
         return self._url
 
     @property
+    def labels(self):
+        return self._labels
+
+    @property
     def branches(self):
         return self._branches
+
+    @property
+    def pull_reuqests(self):
+        return self._pull_requests
 
     def setup_branches(self, url):
         resp = requests.get(url + '/branches/')
         soup = BeautifulSoup(resp.text)
         branches = soup.findAll(*self._rtype['branches_names'])
         users = soup.findAll(*self._rtype['branches_users'])
+        
         for branch, auth in zip(branches, users):
             yield Branch(name=branch.text, auth=auth.text, url=self.url)
+
+    def setup_labels(self, url):
+        resp = requests.get(url + '/labels/')
+        soup = BeautifulSoup(resp.text)
+        return soup.findAll(*self._rtype['repository_labels'])
+
+    def setup_pull_request(self, url):
+        resp = requests.get(url + '/pulls/')
+        soup = BeautifulSoup(resp.text)
+        names = soup.findAll(*self._rtype['repository_pull_request_name'])
+        # date = soup.findAll(*self._rtype['repository_pull_request_date'])
+
+
+        for name in names:
+            yield PullRequest(name=name.text, author=None, date=None, labels=None)
 
     def __repr__(self):
         return f'<repository> {self.name}, {self.url}'

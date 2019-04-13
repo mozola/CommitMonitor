@@ -92,9 +92,16 @@ def repository_subscribed():
                            repositories=all_repositories._container)
 
 
-@app.route('/repository/merge_requests')
+@app.route('/repository/merge_requests', methods=['POST', 'GET'])
 def repository_merge_requests():
-    return render_template('repository/repository_merge_requests.html')
+    repositories = all_repositories._container
+    if request.method == 'POST':
+        project_name = request.form['project_name']
+        return render_template('repository/repository_merge_requests.html',
+                               repositories=repositories,
+                               project_name=project_name)
+    return render_template('repository/repository_merge_requests.html',
+                           repositories=repositories)
 
 
 @app.route('/repository/labels')
